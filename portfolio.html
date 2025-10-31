@@ -1,1 +1,224 @@
-Portfolio
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>IIT Freshman — Virtual Assistant · RAG Demo</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#7c3aed;--muted:#94a3b8;--glass:rgba(255,255,255,0.04)}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#071024 0%, #07122b 60%);color:#e6eef8;margin:0;padding:36px}
+    .container{max-width:900px;margin:0 auto}
+    header{display:flex;gap:18px;align-items:center}
+    .avatar{width:84px;height:84px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#06b6d4);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:28px}
+    h1{margin:0;font-size:22px}
+    p.lead{color:var(--muted);margin:6px 0 18px}
+    .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,0.6);margin-bottom:16px}
+    .row{display:flex;gap:12px}
+    .col{flex:1}
+    ul.skills{display:flex;flex-wrap:wrap;gap:8px;padding:0;list-style:none;margin:6px 0}
+    ul.skills li{background:var(--glass);padding:8px 10px;border-radius:999px;color:var(--muted);font-size:13px}
+    h2{font-size:16px;margin:0 0 8px}
+    code{background:#071226;padding:2px 6px;border-radius:6px;color:#cde3ff}
+    .rag-demo{display:grid;grid-template-columns:1fr 320px;gap:12px}
+    .input{display:flex;gap:8px}
+    input[type=text]{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    button{background:var(--accent);border:none;color:white;padding:10px 12px;border-radius:8px;cursor:pointer}
+    .kb{font-size:13px;color:var(--muted);max-height:260px;overflow:auto;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px}
+    .snippet{background:rgba(255,255,255,0.02);padding:8px;margin-bottom:8px;border-radius:8px}
+    .sources{font-size:12px;color:var(--muted);margin-top:8px}
+    .download{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px 10px;border-radius:8px;cursor:pointer}
+    footer{color:var(--muted);font-size:13px;margin-top:12px}
+    .badge{display:inline-block;padding:6px 8px;border-radius:8px;background:linear-gradient(90deg,#0b1220, rgba(255,255,255,0.02));font-size:12px;color:var(--muted)}
+    pre{background:#061226;padding:10px;border-radius:8px;overflow:auto}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="avatar">IIT</div>
+      <div>
+        <h1>I am [Your Name] — Virtual Assistant (IIT Freshman)</h1>
+        <p class="lead">Tech-forward VA focusing on admin, marketing, and developer-friendly automation. Includes a small RAG (Retrieval-Augmented Generation) demo you can try below.</p>
+      </div>
+    </header>
+
+    <section class="card">
+      <div class="row">
+        <div class="col">
+          <h2>What I offer</h2>
+          <ul>
+            <li>Inbox & calendar management, scheduling, research, documentation</li>
+            <li>Technical support: Notion, Airtable, Google Workspace, simple automations</li>
+            <li>Marketing: social content, market research, email support</li>
+            <li>Dev-friendly: I know <code>C++</code>, <code>Python</code>, <code>JavaScript</code> — can assist with small scripts, data cleanup and tooling</li>
+          </ul>
+          <h2>Top skills</h2>
+          <ul class="skills">
+            <li>Admin</li><li>Notion</li><li>Google Workspace</li><li>Python</li><li>JavaScript</li><li>Marketing</li><li>Automation</li>
+          </ul>
+        </div>
+        <div style="width:220px">
+          <div class="badge">Available: Part-time · IST</div>
+          <p style="margin-top:10px;color:var(--muted)">Contact: <br><code>your.email@example.com</code></p>
+          <button class="download" id="downloadBtn">Download HTML</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>RAG Demo — Try it (local demo)</h2>
+      <p style="color:var(--muted);margin-top:4px">This is a lightweight, client-side demonstration of Retrieval-Augmented Generation. It retrieves relevant documents from a small knowledge base and composes an answer using the retrieved snippets. It's a conceptual demo — a production RAG system uses an embedding model + LLM. (See notes below.)</p>
+
+      <div class="rag-demo" style="margin-top:12px">
+        <div>
+          <div class="input">
+            <input id="query" type="text" placeholder="Ask something related to my experience, skills, or RAG — e.g., 'How can you automate scheduling?'" />
+            <button id="askBtn">Run</button>
+          </div>
+
+          <div style="margin-top:10px">
+            <h3 style="margin:6px 0">Generated answer</h3>
+            <div id="answer" class="kb" style="min-height:120px">Try a query and hit Run — the demo returns relevant document snippets and a composed answer.</div>
+            <div id="srcs" class="sources"></div>
+          </div>
+        </div>
+
+        <aside>
+          <h3 style="margin:6px 0">Knowledge Base</h3>
+          <div class="kb" id="kbList"></div>
+          <h3 style="margin-top:8px">How this demo works</h3>
+          <div class="kb">
+            <ol>
+              <li>Documents are tokenized and vectorized (simple TF vectors).</li>
+              <li>Query is vectorized and similarity (cosine) finds top docs.</li>
+              <li>Answer is composed by extracting sentences from top docs that match the query keywords.</li>
+            </ol>
+            <p style="font-size:12px;color:var(--muted)">For real-world RAG: use an embedding model (OpenAI / HuggingFace), store vectors in a vector DB (Pinecone/Weaviate/FAISS), and call an LLM to synthesize results.</p>
+          </div>
+        </aside>
+      </div>
+
+      <div style="margin-top:8px">
+        <h3 style="margin:6px 0">Implementation notes (short)</h3>
+        <pre>
+Client-side demo: JS builds TF vectors, ranks by cosine similarity, composes answer via simple extraction.
+Production RAG (recommended):
+1) Create embeddings (e.g. OpenAI's text-embedding-3-small)
+2) Store vectors in Pinecone/Weaviate/FAISS
+3) Retrieve top-k, send snippets + user query to LLM for final answer
+        </pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Example projects (mock & templates)</h2>
+      <ul>
+        <li>Notion startup dashboard template (tasks, roadmap, meeting notes)</li>
+        <li>Sample market research spreadsheet comparing 5 competitors</li>
+        <li>Canva post templates and a 2-week social schedule</li>
+      </ul>
+      <p style="color:var(--muted)">I can convert any of these into live deliverables for your startup — templates, automation scripts, or onboarding docs.</p>
+    </section>
+
+    <footer>
+      <p>Want this page customized with your name, contact info, and extra samples? Reply and I'll update it. Good luck with your lead — and congrats again! 🎉</p>
+    </footer>
+  </div>
+
+<script>
+// === Knowledge base ===
+const KB = [
+  {id: 'doc1', title: 'Scheduling Automation', text: 'I can automate scheduling by using Google Calendar APIs, setting up webhook-based calendar invites, and linking with a Notion or Airtable base. Typical flow: form -> availability check -> calendar invite. I have experience scripting in Python and JavaScript to connect APIs.'},
+  {id: 'doc2', title: 'Social Media Support', text: 'I create social media content plan, design posts in Canva, schedule through Buffer, and track engagement metrics in a Google Sheet. I can also write captions and short post copy.'},
+  {id: 'doc3', title: 'Market Research', text: 'Market research includes competitor analysis, pricing comparisons, and customer persona creation. I compile data in spreadsheets and summarize key insights in a one-page brief.'},
+  {id: 'doc4', title: 'Notion & Workflow Templates', text: 'I build Notion dashboards with a weekly planner, project tracker, and meeting notes template. Integrates with Google Calendar and Slack for notifications.'},
+  {id: 'doc5', title: 'Technical Support & Scripting', text: 'I can write small scripts in Python or JS to clean CSVs, automate report generation, or pull data from APIs. Comfortable with basic debugging and version control using git.'}
+];
+
+// Render KB list
+const kbList = document.getElementById('kbList');
+KB.forEach(d=>{
+  const el = document.createElement('div'); el.className='snippet';
+  el.innerHTML = `<strong>${d.title}</strong><div style="margin-top:6px;color:var(--muted);font-size:13px">${d.text}</div>`;
+  kbList.appendChild(el);
+});
+
+// --- Simple vectorizer (term frequency) ---
+function tokenize(s){
+  return s.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(Boolean);
+}
+
+function buildVocab(docs){
+  const vocab = new Map(); let idx=0;
+  docs.forEach(d=>{tokenize(d.text).forEach(t=>{ if(!vocab.has(t)) vocab.set(t, idx++); }) });
+  return vocab;
+}
+
+function vectorize(text, vocab){
+  const vec = new Array(vocab.size).fill(0);
+  tokenize(text).forEach(t=>{ if(vocab.has(t)) vec[vocab.get(t)] += 1; });
+  return vec;
+}
+
+function dot(a,b){let s=0;for(let i=0;i<a.length;i++) s+=a[i]*b[i];return s;}
+function norm(a){let s=0;for(let i=0;i<a.length;i++) s+=a[i]*a[i];return Math.sqrt(s);} 
+function cosine(a,b){ const na=norm(a), nb=norm(b); if(na===0||nb===0) return 0; return dot(a,b)/(na*nb); }
+
+const vocab = buildVocab(KB);
+const docVecs = KB.map(d=>vectorize(d.text, vocab));
+
+function retrieve(query, topK=2){
+  const qv = vectorize(query, vocab);
+  const scores = docVecs.map((dv,i)=>({i,score:cosine(qv,dv)}));
+  scores.sort((a,b)=>b.score-a.score);
+  return scores.slice(0,topK).map(s=>({doc:KB[s.i],score:s.score}));
+}
+
+function extractSentencesWithTerms(doc, query){
+  const terms = tokenize(query);
+  const sents = doc.text.match(/[^\.\!\?]+[\.\!\?]?/g) || [doc.text];
+  const chosen = sents.filter(s=> terms.some(t=> s.toLowerCase().includes(t))).slice(0,3);
+  return chosen.length? chosen.join(' ') : sents.slice(0,1).join(' ');
+}
+
+// Compose answer: naive synth using retrieved sentences
+function composeAnswer(query){
+  const retrieved = retrieve(query,3);
+  if(retrieved.length===0) return {answer: 'No relevant documents found in KB.', sources:[]};
+  const pieces = [];
+  retrieved.forEach(r=>{
+    pieces.push(extractSentencesWithTerms(r.doc, query));
+  });
+  const answer = pieces.join('\n\n');
+  const sources = retrieved.map(r=>r.doc.title + ` (score: ${r.score.toFixed(2)})`);
+  return {answer, sources};
+}
+
+// UI hooks
+const askBtn = document.getElementById('askBtn');
+const queryInput = document.getElementById('query');
+const answerBox = document.getElementById('answer');
+const srcs = document.getElementById('srcs');
+
+askBtn.addEventListener('click', ()=>{
+  const q = queryInput.value.trim();
+  if(!q){ answerBox.textContent = 'Please enter a query.'; return; }
+  answerBox.textContent = 'Thinking...';
+  setTimeout(()=>{
+    const out = composeAnswer(q);
+    answerBox.innerHTML = out.answer.split('\n\n').map(p=>`<div style="margin-bottom:8px">${p}</div>`).join('');
+    srcs.textContent = 'Sources: ' + out.sources.join(' · ');
+  }, 250);
+});
+
+// download html
+const downloadBtn = document.getElementById('downloadBtn');
+downloadBtn.addEventListener('click', ()=>{
+  const blob = new Blob([document.documentElement.outerHTML], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'VA_Portfolio_RAG.html'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+});
+
+</script>
+</body>
+</html>
