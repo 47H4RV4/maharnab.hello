@@ -24,6 +24,10 @@
     .badge{display:inline-block;padding:4px 8px;font-size:11px;border-radius:6px;background:linear-gradient(90deg,#0b1220,#19193f);color:#94a3b8;margin-left:8px}
     .suggestions{margin:6px 0}
     .suggestion{display:inline-block;padding:5px 10px;background:rgba(124,58,237,0.08);border-radius:7px;font-size:13px;color:#cde3ff;cursor:pointer;margin-right:8px}
+    .education-item{margin-bottom:12px;padding:10px;background:rgba(255,255,255,0.02);border-radius:8px;border-left:3px solid #7c3aed}
+    .education-item h4{margin:0 0 4px;color:#cde3ff;font-size:15px}
+    .education-item .meta{color:#94a3b8;font-size:13px;display:flex;gap:8px;flex-wrap:wrap}
+    .education-item .meta span{display:flex;align-items:center;gap:4px}
   </style>
   <!-- Load TensorFlow.js Universal Sentence Encoder -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.14.0"></script>
@@ -32,7 +36,7 @@
 <body>
   <div class="container">
     <header>
-      <div class="avatar">IIT</div>
+      <div class="avatar">ME</div>
       <div>
         <h1>I am Maharnab Samadder — Virtual Assistant</h1>
         <p style="color:#94a3b8;">Tech-forward VA focusing on admin, marketing, and developer-friendly automation. Try the advanced RAG demo below!</p>
@@ -51,6 +55,17 @@
       <ul class="skills">
         <li>Admin</li><li>Notion</li><li>Google Workspace</li><li>Python</li><li>JavaScript</li><li>Marketing</li><li>Automation</li>
       </ul>
+    </section>
+
+    <section class="card">
+      <h2>Education</h2>
+      <div class="education-item">
+        <h4>BS Economics</h4>
+        <div class="meta">
+          <span>📚 Indian Institute of Technology Patna (IIT Patna)</span>
+          <span>📅 2025 - 2028</span>
+        </div>
+      </div>
     </section>
 
     <section class="card">
@@ -225,7 +240,7 @@ ES6+ modular architecture, query suggestions, relevance bar, accessibility.
     // --- Helper: Extract most relevant sentences ---
     function extractRelevantSentences(doc, query){
       const terms = tokenize(query);
-      const sents = doc.text.match(/[^\.\!\?]+[\.\!\?]?/g) || [doc.text];
+      const sents = doc.text.match(/[^.!?]+[.!?]?/g) || [doc.text];
       const chosen = sents.filter(s=> terms.some(t=> s.toLowerCase().includes(t))).slice(0,3);
       return chosen.length? chosen.join(' ') : sents.slice(0,1).join(' ');
     }
