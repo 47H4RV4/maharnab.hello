@@ -7,9 +7,13 @@
   <style>
     body{font-family:Inter,system-ui,Segoe UI,Roboto;background:linear-gradient(180deg,#071024 0%, #07122b 60%);color:#e6eef8;margin:0;padding:36px}
     .container{max-width:900px;margin:0 auto}
-    header{display:flex;gap:18px;align-items:center}
-    .avatar{width:84px;height:84px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#06b6d4);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:28px}
-    h1{margin:0;font-size:22px}
+    header{display:flex;gap:18px;align-items:center;justify-content:space-between}
+    .header-left{display:flex;gap:18px;align-items:center;flex:1}
+    .avatar{width:84px;height:84px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#06b6d4);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:28px;flex-shrink:0}
+    .header-content h1{margin:0;font-size:22px}
+    .header-links{display:flex;gap:12px;margin-top:8px}
+    .header-links a{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:rgba(255,255,255,0.04);border-radius:6px;text-decoration:none;color:#94a3b8;font-size:13px;transition:all 0.2s}
+    .header-links a:hover{background:rgba(124,58,237,0.2);color:#cde3ff}
     .card{background:#0b1220;padding:18px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,0.6);margin-bottom:16px}
     ul.skills{display:flex;flex-wrap:wrap;gap:8px;padding:0;list-style:none;margin:6px 0}
     ul.skills li{background:rgba(255,255,255,0.04);padding:8px 10px;border-radius:999px;color:#94a3b8;font-size:13px}
@@ -36,10 +40,17 @@
 <body>
   <div class="container">
     <header>
-      <div class="avatar">ME</div>
-      <div>
-        <h1>I am Maharnab Samadder — Virtual Assistant</h1>
-        <p style="color:#94a3b8;">Tech-forward VA focusing on admin, marketing, and developer-friendly automation. Try the advanced RAG demo below!</p>
+      <div class="header-left">
+        <div class="avatar">Me</div>
+        <div class="header-content">
+          <h1>I am Maharnab Samadder — Virtual Assistant</h1>
+          <p style="color:#94a3b8;margin:4px 0;">Tech-forward VA focusing on admin, marketing, and developer-friendly automation.</p>
+          <div class="header-links">
+            <a href="https://www.linkedin.com/in/maharnab/" target="_blank" rel="noopener noreferrer">
+              <span>🔗</span> LinkedIn
+            </a>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -50,10 +61,11 @@
         <li>Technical support: Notion, Airtable, Google Workspace, simple automations</li>
         <li>Marketing: social content, market research, email support</li>
         <li>Dev-friendly: I know <code>C++</code>, <code>Python</code>, <code>JavaScript</code> — can assist with small scripts, data cleanup and tooling</li>
+        <li>Photo editing: Canva, Adobe suite basics, image composition and design</li>
       </ul>
       <h2>Top skills</h2>
       <ul class="skills">
-        <li>Admin</li><li>Notion</li><li>Google Workspace</li><li>Python</li><li>JavaScript</li><li>Marketing</li><li>Automation</li>
+        <li>Admin</li><li>Notion</li><li>Google Workspace</li><li>Python</li><li>JavaScript</li><li>Marketing</li><li>Automation</li><li>n8n</li><li>Photo Editing</li><li>Graphics Designing</li><li>Photoshop</li><li>Canva</li>
       </ul>
     </section>
 
@@ -102,13 +114,14 @@ ES6+ modular architecture, query suggestions, relevance bar, accessibility.
       {id: 'doc2', title: 'Social Media Support', text: 'I create social media content plan, design posts in Canva, schedule through Buffer, and track engagement metrics in a Google Sheet. I can also write captions and short post copy.'},
       {id: 'doc3', title: 'Market Research', text: 'Market research includes competitor analysis, pricing comparisons, and customer persona creation. I compile data in spreadsheets and summarize key insights in a one-page brief.'},
       {id: 'doc4', title: 'Notion & Workflow Templates', text: 'I build Notion dashboards with a weekly planner, project tracker, and meeting notes template. Integrates with Google Calendar and Slack for notifications.'},
-      {id: 'doc5', title: 'Technical Support & Scripting', text: 'I can write small scripts in Python or JS to clean CSVs, automate report generation, or pull data from APIs. Comfortable with basic debugging and version control using git.'}
+      {id: 'doc5', title: 'Technical Support & Scripting', text: 'I can write small scripts in Python or JS to clean CSVs, automate report generation, or pull data from APIs. Comfortable with basic debugging and version control using git.'},
+      {id: 'doc6', title: 'Photo Editing & Design', text: 'I have expertise in photo editing using Canva and Adobe suite basics. I can compose images, enhance visual content, create graphics for social media, and design professional visual assets for marketing materials.'}
     ];
     // Suggested queries for UX
     const suggestions = [
       "How can you automate scheduling?",
       "Show sample market research outputs",
-      "What are your top skills?",
+      "What are your photo editing skills?",
       "Explain your Notion dashboards"
     ];
     document.getElementById('suggestions').innerHTML =
